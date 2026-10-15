@@ -59,6 +59,23 @@ NearestNeighborAny(start):
 
 In both nearest neighbor methods we build an open path. At the end we close it into a cycle by connecting the last node with the first one.
 
+### Greedy cycle
+
+We start from one node and add the node that increases the objective the least. With only two nodes the cycle goes to the second node and back, so the edge is counted twice. Then in each step we try every node that is not in the cycle yet and every edge of the cycle where we could put it. We pick the node and the edge that increase the objective the least. Unlike the nearest neighbor methods, we always work on a closed cycle, so there is no beginning or end.
+
+```
+GreedyCycle(start):
+    for each node j other than start:
+        score(j) = 2 * dist(start, j) + cost(j)
+    cycle = [start, node with the smallest score]
+    while cycle has less than k nodes:
+        for each node j not in cycle:
+            for each edge (a, b) in cycle (including the edge from last to first):
+                delta = dist(a, j) + dist(j, b) - dist(a, b) + cost(j)
+        insert the node with the smallest delta into its best edge
+    return cycle
+```
+
 ## Results
 
 We ran each method 200 times on each instance. The table shows the objective function value (cycle length plus node costs).
@@ -68,6 +85,7 @@ We ran each method 200 times on each instance. The table shows the objective fun
 | Random | 241035 | 287165 | 261226.03 | 183160 | 229951 | 206128.23 |
 | NN (end only) | 84362 | 90075 | 87476.03 | 56007 | 63166 | 59553.28 |
 | NN (any position) | 72328 | 77022 | 74293.92 | 52915 | 66164 | 59274.41 |
+| Greedy cycle | 72590 | 75132 | 73777.69 | 55655 | 63736 | 60221.98 |
 
 ## Visualization
 
@@ -107,6 +125,16 @@ TSPB (52915):
 
 110, 2, 14, 20, 74, 153, 182, 52, 90, 129, 127, 80, 54, 192, 162, 104, 76, 185, 57, 89, 86, 46, 72, 3, 184, 173, 151, 122, 117, 8, 160, 69, 172, 136, 133, 120, 156, 43, 48, 96, 198, 121, 130, 191, 50, 42, 147, 116, 37, 146, 13, 149, 28, 145, 65, 158, 177, 125, 26, 170, 197, 36, 132, 29, 6, 180, 115, 155, 71, 175, 134, 45, 157, 60, 40, 141, 97, 154, 140, 47, 38, 21, 176, 30, 183, 189, 168, 64, 59, 85, 51, 73, 167, 152, 34, 24, 181, 179, 87, 82
 
+### Greedy cycle
+
+TSPA (72590):
+
+116, 149, 168, 63, 11, 49, 60, 108, 152, 100, 90, 123, 83, 160, 97, 127, 69, 171, 2, 189, 30, 187, 141, 87, 45, 73, 135, 114, 181, 192, 158, 58, 84, 134, 72, 176, 150, 151, 182, 57, 64, 107, 88, 78, 193, 153, 170, 146, 159, 130, 113, 89, 42, 106, 93, 47, 147, 50, 3, 169, 1, 178, 101, 29, 163, 136, 186, 164, 142, 8, 174, 131, 54, 9, 33, 36, 177, 52, 179, 53, 140, 144, 67, 16, 51, 156, 35, 185, 102, 28, 180, 132, 76, 4, 71, 157, 91, 80, 48, 31
+
+TSPB (55655):
+
+36, 197, 6, 180, 115, 170, 97, 140, 47, 155, 71, 175, 134, 45, 157, 60, 141, 40, 33, 64, 21, 189, 168, 69, 160, 172, 136, 133, 120, 8, 117, 72, 46, 86, 184, 3, 173, 122, 151, 98, 111, 27, 135, 76, 185, 162, 192, 80, 52, 182, 20, 74, 2, 93, 110, 118, 14, 153, 90, 129, 127, 54, 104, 57, 89, 156, 43, 48, 96, 198, 121, 63, 130, 191, 183, 30, 176, 38, 154, 26, 125, 177, 138, 158, 145, 149, 147, 42, 116, 37, 146, 13, 28, 65, 178, 103, 29, 132, 1, 174
+
 ## Solution checker
 
 All best solutions were checked with the solution checker.
@@ -117,6 +145,7 @@ https://github.com/Adam-Mazur/evolutionary-computation-2026
 
 ## Conclusions
 
-- Both greedy methods are about 3 times better than random.
-- NN with any position gave the best results on both instances. It can put a node in the middle of the path, so it avoids the long jumps that NN with end only has to make.
+- All greedy methods are about 3 times better than random.
+- NN with any position gave the best single solutions on both instances. It can put a node in the middle of the path, so it avoids the long jumps that NN with end only has to make.
+- Greedy cycle has the best mean and the smallest spread on TSPA, but on TSPB its mean is the worst of the greedy methods.
 - On TSPB the two NN methods have almost the same mean, so the gain there is smaller.

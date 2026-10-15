@@ -5,24 +5,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-DATA_DIR = "data"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SCRIPT_DIR, "..", "data")
 
 # solution files are named <method>_<instance>, e.g. nearest_neighbor_any_tspa
 files = sorted(f for f in glob.glob(os.path.join(DATA_DIR, "*_tsp*")))
 methods = sorted({os.path.basename(f).rsplit("_", 1)[0] for f in files})
 instances = sorted({os.path.basename(f).rsplit("_", 1)[1] for f in files})
 
+# one row per method, one column per instance
 fig, axes = plt.subplots(
-    len(instances), len(methods),
-    figsize=(7 * len(methods), 4 * len(instances)),
+    len(methods), len(instances),
+    figsize=(7 * len(instances), 4 * len(methods)),
     squeeze=False,
 )
 
-for row, instance in enumerate(instances):
+for col, instance in enumerate(instances):
     df = pd.read_csv(os.path.join(DATA_DIR, f"{instance.upper()}.csv"), sep=";", header=None)
     x, y, cost = df[0].values, df[1].values, df[2].values
 
-    for col, method in enumerate(methods):
+    for row, method in enumerate(methods):
         ax = axes[row, col]
         path = os.path.join(DATA_DIR, f"{method}_{instance}")
         if not os.path.exists(path):
@@ -47,5 +49,5 @@ for row, instance in enumerate(instances):
         fig.colorbar(points, ax=ax, label="node cost", shrink=0.8)
 
 fig.tight_layout()
-fig.savefig("solutions.png", dpi=120)
+fig.savefig(os.path.join(SCRIPT_DIR, "solutions.png"), dpi=120)
 print("Saved solutions.png")

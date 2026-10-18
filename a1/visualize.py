@@ -21,7 +21,7 @@ fig, axes = plt.subplots(
 )
 
 for col, instance in enumerate(instances):
-    df = pd.read_csv(os.path.join(DATA_DIR, f"{instance.upper()}.csv"), sep=";", header=None)
+    df = pd.read_csv(os.path.join(SCRIPT_DIR, "..", f"{instance.upper()}.csv"), sep=";", header=None)
     x, y, cost = df[0].values, df[1].values, df[2].values
 
     for row, method in enumerate(methods):

@@ -137,7 +137,7 @@ TSPB (55655):
 
 ## Solution checker
 
-All best solutions were checked: each has 100 distinct nodes and its objective value was recomputed from scratch, independently of the code of the heuristics (the check cell in the notebook).
+All best solutions were checked: each has 100 distinct nodes and its objective value was recomputed from scratch, independently of the code of the heuristics (the check cell in the notebook). All best solutions were also checked with the provided solution checker (Solution checker.xlsx) and the objective values match.
 
 ## Source code
 
